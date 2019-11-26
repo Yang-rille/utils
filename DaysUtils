@@ -1,0 +1,84 @@
+import com.sunseaiot.aiot.business.exception.AiotErrorCode;
+import com.sunseaiot.aiot.business.exception.AiotException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class DaysUtils {
+  private static final long MINUTE_OF_A_DAY = 86400;     // 每天的秒数
+  private static final long DAY_OF_STATISTICS = 30;      // 统计的天数
+
+  //获取某个自然月所有的day
+  public static List<String> getDayListOfMonth() {
+    List<String> list = new ArrayList<>();
+    Calendar aCalendar = Calendar.getInstance();
+    int year = aCalendar.get(Calendar.YEAR);//年份
+    int month = aCalendar.get(Calendar.MONTH) + 1;//月份
+    int day = aCalendar.get(Calendar.DAY_OF_MONTH);
+
+    aCalendar.setTime(new Date());
+    aCalendar.add(Calendar.MONTH, -1);
+
+    int lastYear = aCalendar.get(Calendar.YEAR);//年份
+    int lastMonth = aCalendar.get(Calendar.MONTH) + 1 ;//月份
+    int lastDay = aCalendar.get(Calendar.DAY_OF_MONTH) + 1;
+    int maxDays = aCalendar.getActualMaximum(Calendar.DATE);
+
+    for(int i = lastDay; i <= maxDays; i++) {
+      String aDate = lastYear + "-" + lastMonth + "-" + i;
+      list.add(aDate);
+    }
+    for (int i = 1; i <= day; i++) {
+      String aDate = year + "-" + month + "-" + i;
+      list.add(aDate);
+    }
+    return list;
+  }
+
+//获取某自然年所有的月
+  public static List<String> getMonthListOfYear() {
+
+    Calendar aCalendar = Calendar.getInstance();
+    int year = aCalendar.get(Calendar.YEAR);//年份
+
+    List<String> days = new ArrayList<>();
+    int month = aCalendar.get(Calendar.MONTH) + 1;//月份
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+    aCalendar.setTime(new Date());
+    aCalendar.add(Calendar.YEAR, -1);
+    int lastYear = aCalendar.get(Calendar.YEAR);
+    int lastMonth = aCalendar.get(Calendar.MONTH) + 2;
+    for(int i = lastMonth; i <= 12; i++) {
+      Calendar cal = Calendar.getInstance();
+      //设置年份
+      cal.set(Calendar.YEAR, lastYear);
+      //设置月份
+      cal.set(Calendar.MONTH, i - 1);
+      //获取某月最大天数
+      int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+      //设置日历中月份的最大天数
+      cal.set(Calendar.DAY_OF_MONTH, lastDay);
+      //格式化日期
+
+      String lastDayOfMonth = sdf.format(cal.getTime());
+      days.add(lastDayOfMonth);
+    }
+    for(int i = 1; i < month; i++) {
+      Calendar cal = Calendar.getInstance();
+      //设置年份
+      cal.set(Calendar.YEAR, year);
+      //设置月份
+      cal.set(Calendar.MONTH, i - 1);
+      //获取某月最大天数
+      int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+      //设置日历中月份的最大天数
+      cal.set(Calendar.DAY_OF_MONTH, lastDay);
+      //格式化日期
+
+      String lastDayOfMonth = sdf.format(cal.getTime());
+      days.add(lastDayOfMonth);
+    }
+    days.add(sdf.format(new Date()));
+    return days;
+  }
+ }
