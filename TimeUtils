@@ -1,0 +1,75 @@
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+public class TimeUtils {
+
+  public static long getTomorrow() {
+
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)+1,0,0,0);
+    return calendar.getTime().getTime();
+  }
+
+  public static long getToday() {
+    long time = getTomorrow();
+    return time - 24 * 60 * 60 * 1000L;
+  }
+
+  public static long getYesterday() {
+    return getToday() - 24 * 60 * 60 * 1000L;
+  }
+
+  public static Long getBeginTimeOfDay() {
+    Calendar cal = Calendar.getInstance();
+    cal.set(Calendar.HOUR_OF_DAY, 0);
+    cal.set(Calendar.SECOND, 0);
+    cal.set(Calendar.MINUTE, 0);
+    cal.set(Calendar.MILLISECOND, 0);
+    return cal.getTimeInMillis() / 1000;
+  }
+
+  public static long getAMonthAgo() {
+    Date nowTime = new Date();     //获取当前日期
+    Calendar c = Calendar.getInstance();
+    c.setTime(nowTime);         //塞入当前日期
+    c.set(Calendar.HOUR_OF_DAY, 0);   //将时分秒设置成0，
+    c.set(Calendar.MINUTE, 0);
+    c.set(Calendar.SECOND, 0);
+
+    c.add(Calendar.MONTH, -1);
+    return c.getTime().getTime() + 24 * 3600 * 1000;
+  }
+
+  public static List<String> getDayListOfMonth() {
+    List<String> list = new ArrayList<>();
+    Calendar aCalendar = Calendar.getInstance();
+    int year = aCalendar.get(Calendar.YEAR);//年份
+    int month = aCalendar.get(Calendar.MONTH) + 1;//月份
+    int day = aCalendar.get(Calendar.DAY_OF_MONTH);
+
+    aCalendar.setTime(new Date());
+    aCalendar.add(Calendar.MONTH, -1);
+
+    int lastYear = aCalendar.get(Calendar.YEAR);//年份
+    int lastMonth = aCalendar.get(Calendar.MONTH) + 1;//月份
+    int lastDay = aCalendar.get(Calendar.DAY_OF_MONTH) + 1;
+    int maxDays = aCalendar.getActualMaximum(Calendar.DATE);
+
+    for (int i = lastDay; i <= maxDays; i++) {
+      String aDate = lastYear + "-" + lastMonth + "-" + i;
+      list.add(aDate);
+    }
+    for (int i = 1; i <= day; i++) {
+      String aDate = year + "-" + month + "-" + i;
+      list.add(aDate);
+    }
+    return list;
+  }
+
+  public static Long getBeginTimeOfYesterday() {
+    return getBeginTimeOfDay() - 86400;
+  }
+}
